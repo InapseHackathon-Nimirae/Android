@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity(), OnChartGestureListener {
         supportActionBar!!.hide()
 
         val intent: Intent = intent
-        token = intent.getStringExtra("token")
+        token = "1374977822632346"
 
         retrofitSetting()
 
@@ -263,7 +263,6 @@ class MainActivity : AppCompatActivity(), OnChartGestureListener {
         call.enqueue(object : Callback<All> {
             override fun onResponse(call: Call<All>?, response: Response<All>?) {
                 Log.d("server_call", "onResponse")
-                Log.d("server_token", token)
                 if (response != null) {
                     if (response.code() == 200) {
                         Toast.makeText(this@MainActivity, "데이터 불러오기 성공", Toast.LENGTH_SHORT).show()

@@ -93,14 +93,13 @@ class LoginActivity : AppCompatActivity() {
                 Log.d("login_token", token)
                 if (response?.code() == 200) {
                     val user = response.body()
-                    Log.d("response", user?.name)
                     if (user != null) {
                         editor.putString("name", user.name)
-                        editor.putString("token", user.token)
+                        editor.putString("token", user.access_token)
                         editor.putBoolean("isUser", true)
                         editor.apply()
                         loginIntent.putExtra("name", user.name)
-                        loginIntent.putExtra("token", user.token)
+                        loginIntent.putExtra("token", user.access_token)
                         startActivity(loginIntent)
                         finish()
                     }
