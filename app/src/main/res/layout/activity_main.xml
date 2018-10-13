@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:weightSum="10"
+    tools:context=".MainActivity">
+    <include layout="@layout/actionbar_main"/>
+    <RelativeLayout
+        android:layout_weight="4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.github.mikephil.charting.charts.LineChart>
+        <LinearLayout
+            android:weightSum="2"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:layout_margin="16dp"
+            android:layout_width="120dp"
+            android:layout_height="30dp">
+            <TextView
+                android:layout_marginLeft="0.25dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/graph_kcal"
+                android:background="@drawable/kcal_button"
+                android:text="kcal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                tools:ignore="HardcodedText" />
+            <TextView
+                android:layout_marginRight="0.25dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/graph_money"
+                android:background="@drawable/kcal_button"
+                android:text="money"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical"
+        android:layout_weight="6"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <ImageView
+            android:id="@+id/image_add"
+            android:src="@drawable/ic_add_black_24dp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                android:id="@+id/recycler_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>
