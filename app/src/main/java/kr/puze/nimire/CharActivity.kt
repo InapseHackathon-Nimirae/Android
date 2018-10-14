@@ -10,6 +10,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class CharActivity : AppCompatActivity() {
 
+    private val CHAR_ACTIVITY = 100
+    private val MAIN_ACTIVITY = 200
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_char)

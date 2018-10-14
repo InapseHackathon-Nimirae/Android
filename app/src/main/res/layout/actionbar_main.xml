@@ -17,7 +17,7 @@
         android:id="@+id/actionbar_img"
         android:paddingRight="16dp"
         android:layout_margin="4dp"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/ic_icon"
         android:layout_centerInParent="true"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"

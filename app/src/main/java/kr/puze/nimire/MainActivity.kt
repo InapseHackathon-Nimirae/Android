@@ -56,7 +56,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity(), OnChartGestureListener {
+class MainActivity : AppCompatActivity() {
+
+    private val CHAR_ACTIVITY = 100
+    private val MAIN_ACTIVITY = 200
+
     private val CAMERA_CODE = 111
     private val WRITE_CODE = 222
     private val READ_CODE = 333
@@ -92,14 +96,15 @@ class MainActivity : AppCompatActivity(), OnChartGestureListener {
 
         actionbar_img.setOnClickListener {
             var charIntent = Intent(this@MainActivity, CharActivity::class.java)
-            if(count == 1){
+            if((count % 2) == 1){
                 charIntent.putExtra("gif", "http://172.20.10.4:3000/static/large.gif")
                 charIntent.putExtra("text", "이대로라면 당신은 뚱이가 될거에요!")
             }else{
                 charIntent.putExtra("gif", "http://172.20.10.4:3000/static/medium.gif")
                 charIntent.putExtra("text", "당신은 보통 중의 보통! 보통이군요!")
             }
-            startActivity(charIntent)
+            count = count+1
+            startActivityForResult(charIntent, CHAR_ACTIVITY)
         }
 
         kcals.add(Kcal("2018.10.13", "30"))
@@ -128,7 +133,7 @@ class MainActivity : AppCompatActivity(), OnChartGestureListener {
             checkPermission()
         }
 
-        chart.onChartGestureListener = this
+//        chart.onChartGestureListener = object
         chart.setDrawGridBackground(false)
         chart.isDragEnabled = false
         chart.setScaleEnabled(false)
@@ -271,7 +276,15 @@ class MainActivity : AppCompatActivity(), OnChartGestureListener {
                             kcals = response.body()!!.kcal
                             all = All(accounts, kcals)
                             setData(kcals.size, 30f)
+                            val adapter = AccountRecyclerViewAdapter(accounts, applicationContext)
+                            recycler_account.adapter = adapter
                             recycler_account.adapter.notifyDataSetChanged()
+                            adapter.itemClick = object : AccountRecyclerViewAdapter.ItemClick {
+                                override fun onItemClick(view: View?, position: Int) {
+                                    val item = accounts[position]
+                                    Toast.makeText(this@MainActivity, "날짜 : " + item.date + "\n음식 : " + item.title + "\n가격 : " + item.price, Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }
                     } else {
                         Toast.makeText(this@MainActivity, "code is ", response.code()).show()
@@ -307,7 +320,16 @@ class MainActivity : AppCompatActivity(), OnChartGestureListener {
                             accounts = response.body()!!.account
                             kcals = response.body()!!.kcal
                             all = All(accounts, kcals)
+                            setData(kcals.size, 30f)
+                            val adapter = AccountRecyclerViewAdapter(accounts, applicationContext)
+                            recycler_account.adapter = adapter
                             recycler_account.adapter.notifyDataSetChanged()
+                            adapter.itemClick = object : AccountRecyclerViewAdapter.ItemClick {
+                                override fun onItemClick(view: View?, position: Int) {
+                                    val item = accounts[position]
+                                    Toast.makeText(this@MainActivity, "날짜 : " + item.date + "\n음식 : " + item.title + "\n가격 : " + item.price, Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }
                     } else {
                         Toast.makeText(this@MainActivity, "code is ", response.code()).show()
@@ -377,10 +399,7 @@ class MainActivity : AppCompatActivity(), OnChartGestureListener {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if (intent.resolveActivity(packageManager) != null) {
                 var photoFile: File? = null
-                try {
-                    photoFile = createImageFile()
-                } catch (ex: IOException) {
-                }
+                photoFile = createImageFile()
                 if (photoFile != null) {
                     photoUri = FileProvider.getUriForFile(this, packageName, photoFile)
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
@@ -526,6 +545,7 @@ class MainActivity : AppCompatActivity(), OnChartGestureListener {
             //TODO Spinner 에서 사진첩 고정시켜줘야함
                 GALLERY_CODE -> sendPicture(data!!.data) //갤러리에서 가져오기
                 CAMERA_CODE -> getPictureForPhoto() //카메라에서 가져오기
+                CHAR_ACTIVITY -> call()
             }
         }
     }
@@ -540,42 +560,5 @@ class MainActivity : AppCompatActivity(), OnChartGestureListener {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
         retrofitService = retrofit.create(RetrofitService::class.java)
-    }
-
-
-    override fun onChartGestureStart(me: MotionEvent, lastPerformedGesture: ChartTouchListener.ChartGesture) {
-        Log.i("Gesture", "START, x: " + me.x + ", y: " + me.y)
-    }
-
-    override fun onChartGestureEnd(me: MotionEvent, lastPerformedGesture: ChartTouchListener.ChartGesture) {
-        Log.i("Gesture", "END, lastGesture: " + lastPerformedGesture)
-
-        // un-highlight values after the gesture is finished and no single-tap
-        if (lastPerformedGesture != ChartTouchListener.ChartGesture.SINGLE_TAP)
-            chart.highlightValues(null) // or highlightTouch(null) for callback to onNothingSelected(...)
-    }
-
-    override fun onChartFling(me1: MotionEvent?, me2: MotionEvent?, velocityX: Float, velocityY: Float) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onChartSingleTapped(me: MotionEvent?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onChartLongPressed(me: MotionEvent?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onChartDoubleTapped(me: MotionEvent?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
